@@ -1,0 +1,52 @@
+---
+
+- name: Install Python 3 packages
+  when: "{{ jupyterhub_install_python }}"
+  apt: pkg="{{item}}" state=present
+  with_items: "{{ jupyterhub_python_packages }}"
+  tags: [packages, python]
+
+- name: Install NodeJS packages
+  when: "{{ jupyterhub_install_nodejs }}"
+  apt: pkg="{{item}}" state=present
+  with_items: "{{ jupyterhub_nodejs_packages }}"
+  tags: [packages, nodejs]
+
+- name: Ensure home directory exists
+  file: state=directory path="{{ jupyterhub_home_dir }}" owner=root group=root mode=0755
+
+- name: Ensure manifest for NodeJS modules exists
+  template: src="templates/package.json.j2" dest="{{ jupyterhub_home_dir }}/package.json" owner=root group=root mode=0644
+  tags: [nodejs]
+
+- name: Ensure manifest for Python modules exists
+  template: src="templates/requirements.txt.j2" dest="{{ jupyterhub_home_dir }}/requirements.txt" owner=root group=root mode=0644
+  tags: [python]
+
+- name: Ensure NodeJS modules are installed
+  command: npm install
+  args:
+    chdir: "{{ jupyterhub_home_dir }}"
+  tags: [nodejs]
+
+- name: Ensure virtualenv exists
+  command: virtualenv -p python3 .virtualenv
+  args:
+    chdir:   "{{ jupyterhub_home_dir }}"
+    creates: "{{ jupyterhub_home_dir }}/.virtualenv"
+  tags: [python]
+  
+- name: Ensure Python modules are installed
+  command: ./.virtualenv/bin/pip3 install -r requirements.txt
+  args:
+    chdir: "{{ jupyterhub_home_dir }}"
+  tags: [python]
+
+- name: Ensure log directory exists
+  file: state=directory path="{{ jupyterhub_log_dir }}" owner=root group=root mode=0755
+  tags: [logs]
+
+- name: Ensure configuration directory exists
+  file: state=directory path="{{ jupyterhub_conf_dir }}" owner=root group=root mode=0755
+  tags: [config]
+  

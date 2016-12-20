@@ -1,0 +1,26 @@
+---
+
+# https://github.com/jupyterhub/jupyterhub/blob/master/docs/source/getting-started.md
+
+- name: Complain if cookie secret is missing
+  when: "{{ (not jupyterhub_cookie_create_secret) and (not jupyterhub_cookie_secret) }}"
+  fail: msg="If `jupyterhub_cookie_secret` is not set then `jupyterhub_cookie_create_secret` must be set!"
+
+- name: Create cookie secret
+  local_action: command openssl rand -base64 2048
+  when: "{{ jupyterhub_cookie_create_secret and (not jupyterhub_cookie_secret) }}"
+  register: new_cookie_secret
+  # command: pwgen --capitalize --numerals --symbols --secure -1 64
+
+- name: Create proxy auth token
+  local_action: command openssl rand -hex 32
+  when: "{{ jupyterhub_proxy_auth_token_create and (not jupyterhub_proxy_auth_token) }}"
+  register: new_proxy_auth_token
+
+- name: Ensure configuration file is updated
+  template: src="templates/config.py.j2" dest="{{ jupyterhub_conf_dir }}/config.py" owner=root group=root mode=0600
+  notify:
+    - restart jupyterhub
+  vars:
+    cookie_secret:    "{{ jupyterhub_cookie_secret    if jupyterhub_cookie_secret    else new_cookie_secret.stdout    }}"
+    proxy_auth_token: "{{ jupyterhub_proxy_auth_token if jupyterhub_proxy_auth_token else new_proxy_auth_token.stdout }}"

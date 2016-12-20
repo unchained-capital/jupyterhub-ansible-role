@@ -1,0 +1,10 @@
+---
+
+- include: install.yml
+  tags: [jupyterhub]
+
+- include: config.yml
+  tags: [jupyterhub, config]
+
+- include: service.yml
+  tags: [jupyterhub, service]

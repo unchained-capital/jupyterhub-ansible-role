@@ -1,0 +1,18 @@
+galaxy_info:
+  author: Dhruv Bansal
+  description: Installs JupyterHub
+  company: Unchained Capital
+  license: Apache
+
+  min_ansible_version: 1.2
+
+  platforms:
+    - name: Ubuntu
+      versions:
+        - all
+        - trusty
+        
+  galaxy_tags:
+    - jupyter
+
+dependencies: []

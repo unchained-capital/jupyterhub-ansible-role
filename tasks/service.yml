@@ -1,0 +1,11 @@
+---
+
+- name: Ensure jupyterhub upstart service is defined
+  template: src="templates/upstart.conf.j2" dest=/etc/init/jupyterhub.conf owner=root group=root mode=0644
+  when: ansible_os_family == "Debian"
+  notify:
+    - restart jupyterhub
+  tags: [upstart]
+
+- name: Ensure service is defined
+  service: name=jupyterhub state={{jupyterhub_state}} enabled={{ jupyterhub_enabled }}
