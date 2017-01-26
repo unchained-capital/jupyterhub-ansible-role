@@ -8,3 +8,6 @@
 
 - include: service.yml
   tags: [jupyterhub, service]
+
+- include: jupyter.yml
+  tags: [jupyterhub, config]
