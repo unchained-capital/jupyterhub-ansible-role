@@ -10,4 +10,4 @@
   tags: [jupyterhub, service]
 
 - include: jupyter.yml
-  tags: [jupyterhub, config]
+  tags: [jupyterhub, jupyter, config]
