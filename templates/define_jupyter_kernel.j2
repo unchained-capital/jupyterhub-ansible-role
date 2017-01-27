@@ -1,0 +1,36 @@
+#!/bin/bash
+
+DIR_NAME=$1
+DISPLAY_NAME=$2
+
+if [ $# -eq 2 ]; then
+  if [ $VIRTUAL_ENV ]; then
+    PYTHON_PATH=$(which python)
+  else
+    source .virtualenv/bin/activate
+    PYTHON_PATH=$(which python)
+    deactivate
+  fi
+fi
+
+if [ $# -eq 3 ]; then
+  source $3/bin/activate
+  PYTHON_PATH=$(which python)
+  deactivate
+fi
+
+# Do we want to check if kernel already exists?
+mkdir -p {{ jupyter_kernel_dir }}/$DIR_NAME
+
+cat <<EOT > {{ jupyter_kernel_dir}}/$DIR_NAME/kernel.json
+{"language": "python",
+ "display_name": "$DISPLAY_NAME",
+ "argv": [
+   "$PYTHON_PATH",
+   "-m",
+   "ipykernel",
+   "-f",
+   "{connection_file}"
+ ]
+}
+EOT

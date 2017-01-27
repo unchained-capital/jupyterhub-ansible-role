@@ -54,4 +54,5 @@ jupyterhub_admin_access:   false
 jupyterhub_admin_users:    []
 jupyterhub_user_whitelist: []
 
-jupyter_conf_dir: /etc/jupyter
+jupyter_conf_dir: /usr/share/jupyter
+jupyter_kernel_dir: '{{ jupyter_conf_dir }}/kernels'
