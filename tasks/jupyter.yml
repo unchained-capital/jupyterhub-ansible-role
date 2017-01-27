@@ -11,3 +11,7 @@
 - name: Ensure define_jupyter_kernel script is installed
   template: src="templates/define_jupyter_kernel.j2" dest="/usr/local/bin/define_jupyter_kernel" owner=root group=root mode=0755
   tags: [jupyter]
+
+- name: Ensure jupyter_notebook_config is installed
+  template: src="templates/jupyter_notebook_config.py.j2" dest="/etc/jupyter/jupyter_notebook_config.py" owner=root group=root mode=0644
+  tags: [jupyter, config]

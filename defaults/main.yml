@@ -56,3 +56,5 @@ jupyterhub_user_whitelist: []
 
 jupyter_conf_dir: /usr/share/jupyter
 jupyter_kernel_dir: '{{ jupyter_conf_dir }}/kernels'
+jupyter_root_dir: '/'
+jupyter_home_dir: '/home'
