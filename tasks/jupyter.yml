@@ -13,5 +13,5 @@
   tags: [jupyter]
 
 - name: Ensure jupyter_notebook_config is installed
-  template: src="templates/jupyter_notebook_config.py.j2" dest="/etc/jupyter/jupyter_notebook_config.py" owner=root group=root mode=0644
+  template: src="templates/jupyter_notebook_config.py.j2" dest="{{ jupyter_conf_dir }}/jupyter_notebook_config.py" owner=root group=root mode=0644
   tags: [jupyter, config]
